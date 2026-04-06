@@ -1,0 +1,22 @@
+name: NSE Dashboard
+on:
+  schedule:
+    - cron: '30 10 * * 1-5'   # 4:00 PM IST = 10:30 UTC, Mon-Fri
+  workflow_dispatch:            # also allows manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - run: python nse_dashboard.py
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
